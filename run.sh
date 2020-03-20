@@ -23,7 +23,7 @@ sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
 
 read -p "Install software [Enter]"
-sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla gitg audacity seahorse code transmission make nosync thefuck util-linux-user
+sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla gitg audacity seahorse code transmission make nosync thefuck util-linux-user nano
 
 read -p "Set keyboard.dispatch in VSCode to keyCode"
 
