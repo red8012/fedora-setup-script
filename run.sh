@@ -5,6 +5,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 read -p "Turn off unused search settings [Enter]"
+read -p "Turn off automatic update in Gnome Software [Enter]"
 
 read -p "Install Dash to Dock and Bing Wallpaper Changer [Enter]"
 firefox http://extensions.gnome.org
@@ -16,14 +17,24 @@ firefox "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
 read -p "Upgrade system [Enter]"
 sudo dnf upgrade
 
-read -p "Install NodeJS"
-curl -sL http://rpm.nodesource.com/setup_13.x | bash
-
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
 
+read -p "Enable RPM Fusion [Enter]"
+sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf install lpf-spotify-client
+
 read -p "Install software [Enter]"
 sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla gitg audacity seahorse code transmission make nosync thefuck util-linux-user nano
+
+read -p "Install non-free codecs [Enter]"
+sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-bad-free-extras
+sudo dnf install lame lame-mp3x
+sudo dnf group upgrade --with-optional Multimedia
+
+read -p "Install Google Chrome [Enter]"
+firefox https://google.com/chrome
 
 read -p "Set keyboard.dispatch in VSCode to keyCode"
 
@@ -52,7 +63,6 @@ read -p "Please configure Powerline10k (don't forget to exit when you're done) [
 zsh
 sudo chsh -s /usr/bin/zsh $USER
 
-host file
 read -p "Set hosts file [Enter]"
 wget -O /tmp/hosts https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
 sudo install -o root --backup=numbered /tmp/hosts /etc/hosts
