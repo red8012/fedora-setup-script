@@ -23,10 +23,9 @@ sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.m
 read -p "Enable RPM Fusion [Enter]"
 sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-sudo dnf install lpf-spotify-client
 
 read -p "Install software [Enter]"
-sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla gitg audacity seahorse code transmission make nosync thefuck util-linux-user nano
+sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla gitg audacity seahorse code transmission make nosync thefuck util-linux-user nano meld
 
 read -p "Install non-free codecs [Enter]"
 sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-bad-free-extras
