@@ -75,6 +75,11 @@ echo "kernel.sched_min_granularity_ns = 300000" | sudo tee -a /etc/sysctl.conf #
 echo "kernel.sched_wakeup_granularity_ns = 500000" | sudo tee -a /etc/sysctl.conf # 1/4
 bat /etc/sysctl.conf
 
+read -p "Disable Systemd persistent log [Enter]"
+echo "Storage=volatile" | sudo tee -a /etc/systemd/journald.conf
+echo "RuntimeMaxFileSize=100K" | sudo tee -a /etc/systemd/journald.conf
+echo "RuntimeMaxUse=1M" | sudo tee -a /etc/systemd/journald.conf
+
 read -p "Install Poetry [Enter]"
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
