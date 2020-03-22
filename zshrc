@@ -26,6 +26,11 @@ update_antibody() {
     antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
 }
 
+mkd() {
+    mkdir -pv $1
+    cd $1
+}
+
 alias l="lsd"
 alias ll="lsd -l"
 alias lla="lsd -la"
