@@ -11,3 +11,7 @@ export EDITOR=nano
 update_antibody() {
     antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
 }
+
+alias l="lsd"
+alias ll="lsd -l"
+alias lla="lsd -la"
