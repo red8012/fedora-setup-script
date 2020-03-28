@@ -32,10 +32,17 @@ sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plug
 sudo dnf install lame lame-mp3x
 sudo dnf group upgrade --with-optional Multimedia
 
+read -p "Install bandwhich [Enter]"
+sudo dnf copr enable atim/bandwhich
+sudo dnf install bandwhich
+
 read -p "Install Google Chrome [Enter]"
 firefox https://google.com/chrome
 
-read -p "Set keyboard.dispatch in VSCode to keyCode"
+read -p "Install Terminus [Enter]"
+firefox https://github.com/Eugeny/terminus/releases
+
+read -p "Set keyboard.dispatch in VSCode to keyCode [Enter]"
 
 read -p "Set kernel parameters [Enter]"
 sudo grubby --update-kernel=ALL --args="mitigations=off selinux=0 audit=0 noautogroup nowatchdog"
@@ -62,6 +69,9 @@ read -p "Please configure Powerline10k (don't forget to exit when you're done) [
 zsh
 sudo chsh -s /usr/bin/zsh $USER
 
+read -p "Install fkill"
+sudo yarn global add fkill-cli
+
 read -p "Set hosts file [Enter]"
 wget -O /tmp/hosts https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
 sudo install -o root --backup=numbered /tmp/hosts /etc/hosts
@@ -86,3 +96,7 @@ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poet
 read -p "Generate SSH key [Enter]"
 ssh-keygen -t rsa -C "red8012@gmail.com" -b 4096 -f $HOME/.ssh/id_rsa -P ""
 bat ~/.ssh/id_rsa.pub
+
+read -p "Install color folder [Enter]"
+git clone --depth 1 https://github.com/alex285/Adwaita-Supplementary-Folders /tmp/icons
+mv /tmp/icons/512x512/places ~/.icons
