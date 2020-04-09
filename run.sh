@@ -25,7 +25,7 @@ sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-rele
 sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 read -p "Install software [Enter]"
-sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla gitg audacity seahorse code transmission make nosync thefuck util-linux-user nano meld htop parallel iotop
+sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla gitg audacity seahorse code transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh
 
 read -p "Install non-free codecs [Enter]"
 sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-bad-free-extras
@@ -41,6 +41,9 @@ firefox https://google.com/chrome
 
 read -p "Install Terminus [Enter]"
 firefox https://github.com/Eugeny/terminus/releases
+
+read -p "Install Gitahead [Enter]"
+firefox https://gitahead.github.io/gitahead.com/
 
 read -p "Set keyboard.dispatch in VSCode to keyCode [Enter]"
 
