@@ -7,12 +7,19 @@ IFS=$'\n\t'
 read -p "Turn off unused search settings [Enter]"
 read -p "Turn off automatic update in Gnome Software [Enter]"
 
+read -p "Disable avahi-daemon.service, ModemManager.service [Enter]"
+sudo systemctl disable avahi-daemon.service
+sudo systemctl disable ModemManager.service
+
 read -p "Install Dash to Dock and Bing Wallpaper Changer [Enter]"
 firefox http://extensions.gnome.org
 
 read -p "Set Firefox homepage [Enter]"
 read -p "Install AdBlock [Enter]"
 firefox "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
+
+read -p "Remove Gnome Software [Enter]"
+sudo dnf remove gnome-software
 
 read -p "Upgrade system [Enter]"
 sudo dnf upgrade
@@ -25,7 +32,7 @@ sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-rele
 sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 read -p "Install software [Enter]"
-sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla gitg audacity seahorse code transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh
+sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla audacity seahorse code transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh renameutils
 
 read -p "Install non-free codecs [Enter]"
 sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-bad-free-extras
@@ -86,6 +93,7 @@ echo "vm.dirty_background_bytes = 16777216" | sudo tee -a /etc/sysctl.conf
 echo "kernel.sched_latency_ns = 3000000" | sudo tee -a /etc/sysctl.conf # 1/4
 echo "kernel.sched_min_granularity_ns = 300000" | sudo tee -a /etc/sysctl.conf # 1/5
 echo "kernel.sched_wakeup_granularity_ns = 500000" | sudo tee -a /etc/sysctl.conf # 1/4
+echo "net.ipv4.tcp_slow_start_after_idle = 0" | sudo tee -a /etc/sysctl.conf
 bat /etc/sysctl.conf
 
 read -p "Disable Systemd persistent log [Enter]"
