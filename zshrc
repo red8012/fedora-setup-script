@@ -1,6 +1,6 @@
 # Fix Python locale issues
 export LC_ALL=en_US.UTF-8
-export PATH="$HOME/.poetry/bin:$PATH"
+export PATH="$HOME/.poetry/bin:$HOME/.cargo/bin:$PATH"
 
 ANTIBODY_HOME="$(antibody home)"
 export ZSH="$ANTIBODY_HOME"/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh

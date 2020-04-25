@@ -11,7 +11,7 @@ read -p "Disable avahi-daemon.service, ModemManager.service [Enter]"
 sudo systemctl disable avahi-daemon.service
 sudo systemctl disable ModemManager.service
 
-read -p "Install Dash to Dock and Bing Wallpaper Changer [Enter]"
+read -p "Install Dash to Panel and Bing Wallpaper Changer [Enter]"
 firefox http://extensions.gnome.org
 
 read -p "Set Firefox homepage [Enter]"
@@ -32,7 +32,10 @@ sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-rele
 sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 read -p "Install software [Enter]"
-sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks lsd youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla audacity seahorse code transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh renameutils
+sudo dnf makecache
+sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks cargo youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla audacity seahorse code transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh renameutils
+
+cargo install lsd
 
 read -p "Install non-free codecs [Enter]"
 sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-bad-free-extras
@@ -111,3 +114,22 @@ bat ~/.ssh/id_rsa.pub
 read -p "Install color folder [Enter]"
 git clone --depth 1 https://github.com/alex285/Adwaita-Supplementary-Folders /tmp/icons
 mv /tmp/icons/512x512/places ~/.icons
+
+read -p "Install patched libinput [Enter]"
+pushd /tmp
+git clone git@gitlab.freedesktop.org:red8012/libinput.git
+pushd libinput
+sudo dnf builddep libinput
+sudo dnf install gtk3-devel
+meson --prefix=/usr -Ddocumentation=false builddir/
+ninja -C builddir/
+sudo ninja -C builddir/ install
+popd
+popd
+
+read -p "Set keyboard.dispatch to keyCode in VSCode [Enter]"
+code
+
+read -p "Set git global config"
+read -p "git config --global user.name \"Your Name\""
+read -p "git config --global user.email \"your@email\""
