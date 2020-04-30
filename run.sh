@@ -39,7 +39,7 @@ fi
 read -p "HINT: Set Firefox homepage (manually) [Enter]"
 if ask "Install AdBlock (manually)" 
 then
-    firefox "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
+    firefox --new-tab "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
 fi
 
 if ask "Remove Gnome Software" 
@@ -117,10 +117,11 @@ then
     popd
     popd
     fc-cache -v
-    read -p "\nHINT: Please set terminal font to MesloLGS Nerd (manually)."
+    echo
+    read -p "HINT: Please set terminal font to MesloLGS Nerd (manually)."
 fi
-
-echo "\nHINT: Please set shell to ZSH (manually)."
+echo
+echo "HINT: Please set shell to ZSH (manually)."
 read -p "Terminal -> Preferences -> Profile -> Commands -> check both, input zsh [Enter]" 
 
 if ask "Set up Antibody (may take a minute)" 
@@ -184,11 +185,11 @@ fi
 if ask "Install patched libinput" 
 then
     pushd /tmp
-    git clone git@gitlab.freedesktop.org:red8012/libinput.git
-    pushd libinput
+    wget -O libinput.zip https://gitlab.freedesktop.org/red8012/libinput/-/archive/accelerated-scroll/libinput-accelerated-scroll.zip
+    unzip libinput.zip
+    pushd libinput-accelerated-scroll
     sudo dnf builddep libinput
-    sudo dnf install gtk3-devel
-    meson --prefix=/usr -Ddocumentation=false builddir/
+    meson --prefix=/usr -Ddocumentation=false -Dtests=false -Ddebug-gui=false builddir/
     ninja -C builddir/
     sudo ninja -C builddir/ install
     popd
