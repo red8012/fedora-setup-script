@@ -4,132 +4,201 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-read -p "Turn off unused search settings [Enter]"
-read -p "Turn off automatic update in Gnome Software [Enter]"
+function ask() {
+    read -p "$1? (y/n) "
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        return 0
+    fi
+    return 1
+}
 
-read -p "Disable avahi-daemon.service, ModemManager.service [Enter]"
-sudo systemctl disable avahi-daemon.service
-sudo systemctl disable ModemManager.service
+if ask "Turn off unused search settings (manually)" 
+then
+    gnome-control-center
+fi
 
-read -p "Install Dash to Panel and Bing Wallpaper Changer [Enter]"
-firefox http://extensions.gnome.org
+if ask "Set mutter rt-scheduler" 
+then
+    dconf write /org/gnome/mutter/experimental-features "['rt-scheduler']"
+fi
 
-read -p "Set Firefox homepage [Enter]"
-read -p "Install AdBlock [Enter]"
-firefox "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
+if ask "Disable avahi-daemon.service, ModemManager.service" 
+then
+    sudo systemctl disable avahi-daemon.service
+    sudo systemctl disable ModemManager.service
+fi
 
-read -p "Remove Gnome Software [Enter]"
-sudo dnf remove gnome-software
+if ask "Install Gnome extensions (manually)" 
+then
+    firefox --new-tab https://extensions.gnome.org/extension/1262/bing-wallpaper-changer/
+    firefox --new-tab https://extensions.gnome.org/extension/1160/dash-to-panel/
+    # firefox https://extensions.gnome.org/extension/1253/extended-gestures/
+fi
 
-read -p "Upgrade system [Enter]"
-sudo dnf upgrade
+read -p "HINT: Set Firefox homepage (manually) [Enter]"
+if ask "Install AdBlock (manually)" 
+then
+    firefox "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/"
+fi
 
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+if ask "Remove Gnome Software" 
+then
+    sudo dnf remove gnome-software
+fi
 
-read -p "Enable RPM Fusion [Enter]"
-sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+if ask "Upgrade system" 
+then
+    sudo dnf upgrade
+fi
 
-read -p "Install software [Enter]"
-sudo dnf makecache
-sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks cargo youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla audacity seahorse code transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh renameutils
+if ask "Install software" 
+then
+    sudo dnf makecache
+    sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks cargo youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla audacity seahorse transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh renameutils
+fi
 
-cargo install lsd
+if ask "Install VSCode" 
+then
+    sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+    sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+    sudo dnf install code
+fi
 
-read -p "Install non-free codecs [Enter]"
-sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-bad-free-extras
-sudo dnf install lame lame-mp3x
-sudo dnf group upgrade --with-optional Multimedia
+if ask "Install non-free codecs from RPMFusion" 
+then
+    sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+    sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-bad-free-extras
+    sudo dnf install lame lame-mp3x
+    sudo dnf group upgrade --with-optional Multimedia
+fi
 
-read -p "Install bandwhich [Enter]"
-sudo dnf copr enable atim/bandwhich
-sudo dnf install bandwhich
+if ask "Install bandwhich" 
+then
+    sudo dnf copr enable atim/bandwhich
+    sudo dnf install bandwhich
+fi
 
-read -p "Install Google Chrome [Enter]"
-firefox https://google.com/chrome
+if ask "Install Google Chrome" 
+then
+    firefox --new-tab https://google.com/chrome
+fi
 
-read -p "Install Terminus [Enter]"
-firefox https://github.com/Eugeny/terminus/releases
+if ask "Install Terminus" 
+then
+    firefox --new-tab https://github.com/Eugeny/terminus/releases
+fi
 
-read -p "Install Gitahead [Enter]"
-firefox https://gitahead.github.io/gitahead.com/
+if ask "Install Gitahead" 
+then
+    firefox --new-tab https://gitahead.github.io/gitahead.com/
+fi
 
-read -p "Set keyboard.dispatch in VSCode to keyCode [Enter]"
+if ask "Set keyboard.dispatch in VSCode to keyCode (manually)" 
+then
+    code
+fi
 
-read -p "Set kernel parameters [Enter]"
-sudo grubby --update-kernel=ALL --args="mitigations=off selinux=0 audit=0 noautogroup nowatchdog"
+if ask "Set kernel parameters" 
+then
+    sudo grubby --update-kernel=ALL --args="mitigations=off selinux=0 audit=0 noautogroup nowatchdog"
+fi
 
+if ask "Install MesloLGS Nerd Fonts (used by powerline10k)" 
+then
+    pushd /usr/share/fonts
+    sudo mkdir -p meslo-lgs-nerd
+    pushd meslo-lgs-nerd
+    sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+    sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+    sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+    sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+    popd
+    popd
+    fc-cache -v
+    read -p "\nHINT: Please set terminal font to MesloLGS Nerd (manually)."
+fi
+
+echo "\nHINT: Please set shell to ZSH (manually)."
 read -p "Terminal -> Preferences -> Profile -> Commands -> check both, input zsh [Enter]" 
-read -p "Install MesloLGS Nerd Fonts [Enter]"
-pushd /usr/share/fonts
-sudo mkdir -p meslo-lgs-nerd
-pushd meslo-lgs-nerd
-sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
-sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
-sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
-sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
-popd
-popd
-fc-cache -v
 
-read -p "Set up Antibody (may take a minute) [Enter]"
-curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin
-cp zshrc $HOME/.zshrc
-cp zsh_plugins.txt $HOME/.zsh_plugins.txt
-antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
-read -p "Please configure Powerline10k (don't forget to exit when you're done) [Enter]"
-zsh
-sudo chsh -s /usr/bin/zsh $USER
+if ask "Set up Antibody (may take a minute)" 
+then
+    curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin
+    cp zshrc $HOME/.zshrc
+    cp zsh_plugins.txt $HOME/.zsh_plugins.txt
+    antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
+    cp p10k.zsh $HOME/.p10k.zsh
+    sudo chsh -s /usr/bin/zsh $USER
+fi
 
-read -p "Install fkill"
-sudo yarn global add fkill-cli
+if ask "Install fkill" 
+then
+    sudo yarn global add fkill-cli
+fi
 
-read -p "Set hosts file [Enter]"
-wget -O /tmp/hosts https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
-sudo install -o root --backup=numbered /tmp/hosts /etc/hosts
-rm /tmp/hosts
+if ask "Setup hosts file" 
+then
+    wget -O /tmp/hosts https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts
+    sudo install -o root --backup=numbered /tmp/hosts /etc/hosts
+    rm /tmp/hosts
+fi
 
-read -p "Set sysctl.conf [Enter]"
-echo "vm.swappiness = 1" | sudo tee -a /etc/sysctl.conf
-echo "vm.dirty_background_bytes = 16777216" | sudo tee -a /etc/sysctl.conf
-echo "kernel.sched_latency_ns = 3000000" | sudo tee -a /etc/sysctl.conf # 1/4
-echo "kernel.sched_min_granularity_ns = 300000" | sudo tee -a /etc/sysctl.conf # 1/5
-echo "kernel.sched_wakeup_granularity_ns = 500000" | sudo tee -a /etc/sysctl.conf # 1/4
-echo "net.ipv4.tcp_slow_start_after_idle = 0" | sudo tee -a /etc/sysctl.conf
-bat /etc/sysctl.conf
+if ask "Set sysctl.conf" 
+then
+    echo "vm.swappiness = 1" | sudo tee -a /etc/sysctl.conf
+    echo "vm.dirty_background_bytes = 16777216" | sudo tee -a /etc/sysctl.conf
+    echo "kernel.sched_latency_ns = 3000000" | sudo tee -a /etc/sysctl.conf # 1/4
+    echo "kernel.sched_min_granularity_ns = 300000" | sudo tee -a /etc/sysctl.conf # 1/5
+    echo "kernel.sched_wakeup_granularity_ns = 500000" | sudo tee -a /etc/sysctl.conf # 1/4
+    echo "net.ipv4.tcp_slow_start_after_idle = 0" | sudo tee -a /etc/sysctl.conf
+    bat /etc/sysctl.conf
+fi
 
-read -p "Disable Systemd persistent log [Enter]"
-echo "Storage=volatile" | sudo tee -a /etc/systemd/journald.conf
-echo "RuntimeMaxFileSize=100K" | sudo tee -a /etc/systemd/journald.conf
-echo "RuntimeMaxUse=1M" | sudo tee -a /etc/systemd/journald.conf
+if ask "Disable Systemd persistent log (to reduce disk writes)" 
+then
+    echo "Storage=volatile" | sudo tee -a /etc/systemd/journald.conf
+    echo "RuntimeMaxFileSize=100K" | sudo tee -a /etc/systemd/journald.conf
+    echo "RuntimeMaxUse=1M" | sudo tee -a /etc/systemd/journald.conf
+fi
 
-read -p "Install Poetry [Enter]"
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+if ask "Install Poetry" 
+then
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+fi
 
-read -p "Generate SSH key [Enter]"
-ssh-keygen -t rsa -C "red8012@gmail.com" -b 4096 -f $HOME/.ssh/id_rsa -P ""
-bat ~/.ssh/id_rsa.pub
+if ask "Generate SSH key" 
+then
+    read -p "Enter email: "
+    ssh-keygen -t rsa -C "$REPLY" -b 4096 -f $HOME/.ssh/id_rsa -P ""
+    bat $HOME/.ssh/id_rsa
+fi
 
-read -p "Install color folder [Enter]"
-git clone --depth 1 https://github.com/alex285/Adwaita-Supplementary-Folders /tmp/icons
-mv /tmp/icons/512x512/places ~/.icons
+if ask "Install color folder" 
+then
+    git clone --depth 1 https://github.com/alex285/Adwaita-Supplementary-Folders /tmp/icons
+    mv /tmp/icons/512x512/places ~/.icons
+fi
 
-read -p "Install patched libinput [Enter]"
-pushd /tmp
-git clone git@gitlab.freedesktop.org:red8012/libinput.git
-pushd libinput
-sudo dnf builddep libinput
-sudo dnf install gtk3-devel
-meson --prefix=/usr -Ddocumentation=false builddir/
-ninja -C builddir/
-sudo ninja -C builddir/ install
-popd
-popd
+if ask "Install patched libinput" 
+then
+    pushd /tmp
+    git clone git@gitlab.freedesktop.org:red8012/libinput.git
+    pushd libinput
+    sudo dnf builddep libinput
+    sudo dnf install gtk3-devel
+    meson --prefix=/usr -Ddocumentation=false builddir/
+    ninja -C builddir/
+    sudo ninja -C builddir/ install
+    popd
+    popd
+fi
 
-read -p "Set keyboard.dispatch to keyCode in VSCode [Enter]"
-code
-
-read -p "Set git global config"
-read -p "git config --global user.name \"Your Name\""
-read -p "git config --global user.email \"your@email\""
+if ask "Set git global name and email" 
+then
+    read -p "Enter name: "
+    git config --global user.name "$REPLY"
+    read -p "Enter email: "
+    git config --global user.email "$REPLY"
+fi
