@@ -13,6 +13,8 @@ function ask() {
     return 1
 }
 
+read -p "Run sudo visudo and add your_user_name ALL=(ALL) NOPASSWD:ALL at the bottom."
+
 if ask "Turn off unused search settings (manually)" 
 then
     gnome-control-center
@@ -55,7 +57,7 @@ fi
 if ask "Install software" 
 then
     sudo dnf makecache
-    sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks cargo youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla audacity seahorse transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh renameutils
+    sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks cargo youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla audacity seahorse transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh renameutils lsd
 fi
 
 if ask "Install VSCode" 
@@ -70,7 +72,7 @@ then
     sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
     sudo dnf install gstreamer1-libav gstreamer1-plugins-good-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-bad-free-extras
-    sudo dnf install lame lame-mp3x
+    sudo dnf install lame
     sudo dnf group upgrade --with-optional Multimedia
 fi
 
@@ -102,7 +104,7 @@ fi
 
 if ask "Set kernel parameters" 
 then
-    sudo grubby --update-kernel=ALL --args="mitigations=off selinux=0 audit=0 noautogroup nowatchdog"
+    sudo grubby --update-kernel=ALL --args="mitigations=off selinux=0 audit=0 hardened_usercopy=off noautogroup nowatchdog"
 fi
 
 if ask "Install MesloLGS Nerd Fonts (used by powerline10k)" 
