@@ -58,6 +58,7 @@ if ask "Install software"
 then
     sudo dnf makecache
     sudo dnf install nodejs yarnpkg zsh bat fzf grubby gnome-tweaks cargo youtube-dl zopfli aria2 tldr dconf-editor lollypop filezilla audacity seahorse transmission make nosync thefuck util-linux-user nano meld htop parallel iotop meson cmake gnome-todo mosh renameutils lsd
+    pip install --user pypyp
 fi
 
 if ask "Install VSCode" 
